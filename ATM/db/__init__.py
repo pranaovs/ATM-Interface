@@ -99,8 +99,3 @@ class Database:
     def set_pin(self, accid: int, pin: str) -> None:
         accid = int(accid)
         self.update(accid, "pin", str(pin))
-
-
-@dataclass
-class Transaction:
-    pass
