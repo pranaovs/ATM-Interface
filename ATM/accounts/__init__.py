@@ -11,6 +11,7 @@ class Account:
     def __init__(self, accid: int, pin: str) -> None:
         if database.check_pin(accid=int(accid), pin=hash_pin(pin)):
             self._accid = accid
+            self.name = database.name(accid)
 
         else:
             raise InvalidPin(f"Incorrect pin for accid {accid}")

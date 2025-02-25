@@ -56,29 +56,31 @@ class Database:
 
     def withdraw(self, accid: int, amount: int) -> int:
         accid = int(accid)
+        amount = int(amount)
         details = self.query(accid=accid)
 
         if amount <= 0:
             raise InvalidAmount(f"Amount is not valid: {amount}")
 
-        balance = int(details.get("Balance")) - int(amount)  # type: ignore
+        balance = int(details.get("balance")) - int(amount)  # type: ignore
 
         if balance < 0:
             raise BalanceInsufficient(balance)
 
-        self._db.update(subtract(accid, amount))
+        self.update(accid, "balance", balance)
         return balance
 
     def deposit(self, accid: int, amount: int) -> int:
         accid = int(accid)
+        amount = int(amount)
         details = self.query(accid=accid)
 
         if amount <= 0:
             raise InvalidAmount(f"Amount is not valid: {amount}")
 
-        balance = int(details.get("Balance")) - int(amount)  # type: ignore
+        balance = int(details.get("balance")) + int(amount)  # type: ignore
 
-        self._db.update(add(accid, amount))
+        self.update(accid, "balance", balance)
 
         return balance
 
