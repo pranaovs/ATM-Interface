@@ -24,6 +24,12 @@ class Database:
         else:
             raise AccountNotFound(f"Account id not found: {accid}")
 
+    def name(self, accid: int) -> str:
+        accid = int(accid)
+
+        details = self.query(accid=accid)
+        return str(details["name"])
+
     def balance(self, accid: int) -> int:
         accid = int(accid)
 
