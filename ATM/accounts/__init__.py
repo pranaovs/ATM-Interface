@@ -37,6 +37,9 @@ class Account:
     def update_name(self, name: str) -> None:
         database.update(accid=self._accid, key="name", value=name)
 
+    def check_pin(self, pin: str) -> bool:
+        return database.check_pin(self._accid, hash_pin(pin))
+
 
 class Administrator:
     def __init__(self, pin: str) -> None:
