@@ -39,6 +39,8 @@ class Account:
 
 class Administrator:
     def __init__(self, pin: str) -> None:
+        if not environ.get("ATM_ADMIN_PIN"):
+            raise InvalidPin("Admin pin not set")
         if hash_pin(pin) == hash_pin(environ.get("ATM_ADMIN_PIN")):  # type:ignore
             pass
         else:
