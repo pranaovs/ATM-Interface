@@ -1,7 +1,7 @@
 import cmd
 from getpass import getpass
 
-from ATM.accounts import Account
+from ATM.accounts import Account, Administrator
 from ATM.exceptions import AccountNotFound, BalanceInsufficient, InvalidPin
 
 
@@ -15,10 +15,20 @@ class interface(cmd.Cmd):
 
     def do_login(self, _):
         "Interactively login to your account"
-        accid = int(input("Enter your account number: "))
+        accid = str(input("Enter your account number: "))
         password = str(getpass("Enter your password: "))
+
+        if accid.lower() == "admin":
+            try:
+                user = Administrator(password)
+                AdminLogin(user).cmdloop()
+            except InvalidPin:
+                print("Invalid pin")
+
+            return
+
         try:
-            user = Account(accid, password)
+            user = Account(int(accid), password)
         except AccountNotFound:
             print("Account not found")
             return
@@ -26,6 +36,32 @@ class interface(cmd.Cmd):
             print("Invalid pin")
             return
         PostLogin(user).cmdloop()
+
+
+class AdminLogin(cmd.Cmd):
+    def __init__(self, admin: Administrator):
+        super().__init__()
+        self.admin = admin
+        self.intro = "Welcome Admin. Type help of ? to list commands"
+        self.prompt = "Admin> "
+
+    def do_logout(self, _):
+        "Logout from the account"
+        return True
+
+    def do_new(self, _):
+        "Create a new account"
+        name = input("Enter name: ")
+        phone = int(input("Enter phone: "))
+        pin = getpass("Enter pin: ")
+        accid = self.admin.new_account(name, phone, pin)
+        print(f"Account created with accid: {accid}")
+
+    def do_set_pin(self, accid: int):
+        "Set a new pin for an account"
+        pin = getpass("Enter new pin: ")
+        self.admin.set_pin(accid, pin)
+        print(f"Pin updated for accid: {accid}")
 
 
 class PostLogin(cmd.Cmd):
