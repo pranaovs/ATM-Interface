@@ -1,0 +1,149 @@
+[
+    {
+      "algorithm": "ATM_Authentication",
+      "input": [
+        "account_number",
+        "PIN"
+      ],
+      "output": [
+        "authentication_status (boolean)",
+        "user_session (if authenticated)"
+      ],
+      "steps": [
+        {
+          "step": "Accept account number input from user"
+        },
+        {
+          "step": "Accept PIN input from user"
+        },
+        {
+          "step": "Validate credentials against database",
+          "substeps": [
+            {
+              "step": "Query database for account with matching account number"
+            },
+            {
+              "step": "If account exists, compare stored PIN with input PIN"
+            },
+            {
+              "step": "If PIN matches, return authentication success"
+            },
+            {
+              "step": "If PIN doesn't match, return authentication failure"
+            }
+          ]
+        },
+        {
+          "step": "If authentication successful, create user session"
+        },
+        {
+          "step": "Return authentication status and user session (if authenticated)"
+        }
+      ]
+    },
+    {
+      "algorithm": "ATM_Withdrawal",
+      "input": [
+        "authenticated_user_session",
+        "withdrawal_amount"
+      ],
+      "output": [
+        "transaction_status",
+        "new_balance",
+        "dispensed_cash (if successful)"
+      ],
+      "steps": [
+        {
+          "step": "Verify user is authenticated"
+        },
+        {
+          "step": "Accept withdrawal amount from user"
+        },
+        {
+          "step": "Validate withdrawal request",
+          "substeps": [
+            {
+              "step": "Check if amount is available in user's account"
+            },
+            {
+              "step": "Check if amount is within daily withdrawal limit"
+            },
+            {
+              "step": "Check if ATM has sufficient cash to dispense"
+            }
+          ]
+        },
+        {
+          "step": "Process transaction",
+          "substeps": [
+            {
+              "step": "Deduct amount from user's account balance"
+            },
+            {
+              "step": "Update transaction history"
+            },
+            {
+              "step": "Dispense requested cash to user"
+            }
+          ]
+        },
+        {
+          "step": "Generate transaction receipt"
+        },
+        {
+          "step": "Return updated account balance and transaction status"
+        }
+      ]
+    },
+    {
+      "algorithm": "ATM_Deposit",
+      "input": [
+        "authenticated_user_session",
+        "deposit_amount",
+        "deposit_type (cash/check)"
+      ],
+      "output": [
+        "transaction_status",
+        "new_balance"
+      ],
+      "steps": [
+        {
+          "step": "Verify user is authenticated"
+        },
+        {
+          "step": "Accept deposit type and amount from user"
+        },
+        {
+          "step": "Process deposit based on type",
+          "substeps": [
+            {
+              "step": "If cash: prompt user to insert cash in deposit slot"
+            },
+            {
+              "step": "If check: prompt user to insert check and verify check details"
+            },
+            {
+              "step": "Validate deposited amount equals reported amount"
+            }
+          ]
+        },
+        {
+          "step": "Update account information",
+          "substeps": [
+            {
+              "step": "Add deposit amount to user's account balance"
+            },
+            {
+              "step": "Update transaction history with deposit information"
+            }
+          ]
+        },
+        {
+          "step": "Generate transaction receipt"
+        },
+        {
+          "step": "Return updated account balance and transaction status"
+        }
+      ]
+    }
+  ]
